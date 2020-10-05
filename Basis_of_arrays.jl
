@@ -1,0 +1,152 @@
+### A Pluto.jl notebook ###
+# v0.11.14
+
+using Markdown
+using InteractiveUtils
+
+# ╔═╡ 355c0f7c-06d1-11eb-18dc-d57daa9c6c06
+begin
+	using Pkg
+	Pkg.add(["Images", "ImageIO", "ImageMagick"])
+	using Images
+end
+
+# ╔═╡ e901aefc-06d0-11eb-3d86-05cbd3dc927f
+md"""
+# Basis Of Arrays
+"""
+
+# ╔═╡ 0779a34e-06d1-11eb-2c97-ddfb81bd055c
+md"""
+------------------------------------------------------------
+### Importing Packages
+"""
+
+# ╔═╡ f9ad3406-06d2-11eb-2a6e-9fb3a4349307
+v = [1, 2, 3, 4] # Vector
+
+# ╔═╡ 0ac9ff7e-06d3-11eb-2240-ef33fdd0312d
+size(v)
+
+# ╔═╡ 2452be04-06d3-11eb-1342-975388b76813
+w = [1 2 3
+	 4 5 6]
+
+# ╔═╡ 4e02b1dc-06d3-11eb-37dc-f90f0ae8d176
+## Indexing arrays
+w[1, :]
+
+# ╔═╡ 5d6d9cca-06d3-11eb-38be-1b97451d9e88
+w[:, 1]
+
+# ╔═╡ 6cb713b6-06d3-11eb-035f-6921f2d6ac17
+md"""
+**Vector is 1-D vector in Julia**
+"""
+
+# ╔═╡ 32abb01e-06d3-11eb-1745-73539f7eaca7
+size(w)
+
+# ╔═╡ d79dd728-06d3-11eb-2418-9d165b810981
+## Random Vector
+A1 = rand(1:9, 3, 4) ## Each time produces eacch result
+
+# ╔═╡ eb0c9010-06d3-11eb-0f69-5d5fe35826fb
+size(A1)
+
+# ╔═╡ efca3ec2-06d3-11eb-2dcd-c3156cd92914
+A2 = string.(rand("😀😃😄😁😆😅😂🤣🤓😎", 3, 4))   #|> pretty
+
+# ╔═╡ 64dbe116-06d4-11eb-0973-757e0f5cf08b
+colors = distinguishable_colors(10)
+
+# ╔═╡ 87e9dea6-06d4-11eb-064d-552f123eb52a
+A3 = rand(colors, 10, 10)
+
+# ╔═╡ 87d2a466-06d4-11eb-15c0-33236120bd6e
+leo = load(download("https://image.freepik.com/free-vector/cute-boy-play-basketball-cartoon_78094-614.jpg"))
+
+# ╔═╡ 87ba0dac-06d4-11eb-36be-a780d7951e1a
+john  = load(download("https://media.istockphoto.com/vectors/basketball-player-doing-dribble-vector-id1038542612"))
+
+# ╔═╡ 87a40fc0-06d4-11eb-0156-0d9675408a28
+A4 = rand( [leo, john], 3, 3)
+
+# ╔═╡ 878cdbf2-06d4-11eb-084b-fd7b52165280
+A1
+
+# ╔═╡ 8773f9fc-06d4-11eb-32fd-938f67ef70f6
+begin
+	B = copy(A1)
+	B[1, 1] = 123
+	B
+end
+
+# ╔═╡ 875b825a-06d4-11eb-3975-a5a867f2aabe
+begin
+	combo = fill(leo, 3, 3)
+	combo[2, 2] = john
+	combo
+end
+
+# ╔═╡ cf23c44c-06d6-11eb-10f4-9564d46c0ed2
+mult_table = [i*j for i=1:5, j=1:5]
+
+# ╔═╡ cf110eea-06d6-11eb-39b9-db1ef9b28a80
+begin
+## Creating empty and adding multi table
+E = fill(0, 5, 5)
+for i=1:5, j=1:5 # Doubel loop
+	E[i,j] = i*j
+end
+E
+end
+
+# ╔═╡ cebbd882-06d6-11eb-3add-73b02d8fa426
+D = copy(E)
+
+# ╔═╡ ceab0048-06d6-11eb-1396-0724b4198387
+E.^2  ## Element wise square
+
+# ╔═╡ ce922db6-06d6-11eb-1628-a3560998dbbf
+E^2  ## Matrix got multiplies
+
+# ╔═╡ ce7e773a-06d6-11eb-03ef-436e292a2b57
+[E E]  ## Concanation
+
+# ╔═╡ ce68d89e-06d6-11eb-1876-7595a64677cb
+[A4 A4]
+
+# ╔═╡ 1d182f46-06da-11eb-2121-5be854ca21f6
+[A4 ; A4]
+
+# ╔═╡ Cell order:
+# ╠═e901aefc-06d0-11eb-3d86-05cbd3dc927f
+# ╠═0779a34e-06d1-11eb-2c97-ddfb81bd055c
+# ╠═355c0f7c-06d1-11eb-18dc-d57daa9c6c06
+# ╠═f9ad3406-06d2-11eb-2a6e-9fb3a4349307
+# ╠═0ac9ff7e-06d3-11eb-2240-ef33fdd0312d
+# ╠═2452be04-06d3-11eb-1342-975388b76813
+# ╠═4e02b1dc-06d3-11eb-37dc-f90f0ae8d176
+# ╠═5d6d9cca-06d3-11eb-38be-1b97451d9e88
+# ╠═6cb713b6-06d3-11eb-035f-6921f2d6ac17
+# ╠═32abb01e-06d3-11eb-1745-73539f7eaca7
+# ╠═d79dd728-06d3-11eb-2418-9d165b810981
+# ╠═eb0c9010-06d3-11eb-0f69-5d5fe35826fb
+# ╠═efca3ec2-06d3-11eb-2dcd-c3156cd92914
+# ╠═64dbe116-06d4-11eb-0973-757e0f5cf08b
+# ╠═87e9dea6-06d4-11eb-064d-552f123eb52a
+# ╠═87d2a466-06d4-11eb-15c0-33236120bd6e
+# ╠═87ba0dac-06d4-11eb-36be-a780d7951e1a
+# ╠═87a40fc0-06d4-11eb-0156-0d9675408a28
+# ╠═878cdbf2-06d4-11eb-084b-fd7b52165280
+# ╠═8773f9fc-06d4-11eb-32fd-938f67ef70f6
+# ╠═875b825a-06d4-11eb-3975-a5a867f2aabe
+# ╠═cf23c44c-06d6-11eb-10f4-9564d46c0ed2
+# ╠═cf110eea-06d6-11eb-39b9-db1ef9b28a80
+# ╠═cebbd882-06d6-11eb-3add-73b02d8fa426
+# ╠═ceab0048-06d6-11eb-1396-0724b4198387
+# ╠═ce922db6-06d6-11eb-1628-a3560998dbbf
+# ╠═ce7e773a-06d6-11eb-03ef-436e292a2b57
+# ╠═ce68d89e-06d6-11eb-1876-7595a64677cb
+# ╠═1d182f46-06da-11eb-2121-5be854ca21f6
