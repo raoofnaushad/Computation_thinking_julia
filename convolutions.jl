@@ -16,7 +16,6 @@ begin
 	using Plots
 	using DSP
 	using ImageFiltering
-	using PlutoUI
 	using Markdown
 end
 
@@ -26,7 +25,7 @@ md"""
 """
 
 # ╔═╡ 14d546d2-06ff-11eb-2177-637614ebfd04
-kernel = Kernel.gaussian((1, 1))
+kernel = Kernel.gaussian((3, 3))
 
 # ╔═╡ 14bc416e-06ff-11eb-1374-a9f4c4bf882c
 kernel[0,0]
@@ -39,14 +38,14 @@ sharpen_kernel = centered([
 		-0.5 -1.0 -0.5])
 		
 
-# ╔═╡ 63c38848-0700-11eb-0b0b-edfe02cad910
-sum(sharpen_kernel)
-
 # ╔═╡ 63824522-0700-11eb-2c93-21b28550c46f
+edge_det_kernel_h = Kernel.sobel()[2]
 
+# ╔═╡ 83e5b088-072b-11eb-05ee-1f9a516d2cec
+edge_det_kernel_v = Kernel.sobel()[1]
 
-# ╔═╡ 636aaf02-0700-11eb-2715-49d4b5556ae0
-
+# ╔═╡ ad16d68e-072e-11eb-023c-5fd6ad5fbc1e
+zebra = load("zebra.jpg")
 
 # ╔═╡ e231b0e0-06fd-11eb-3e7c-63b92f7e04f8
 md"""
@@ -79,6 +78,9 @@ end
 # ╔═╡ 14e9f780-06ff-11eb-352e-c3d1bab7808b
 size(floki)
 
+# ╔═╡ ad40d858-072e-11eb-0813-d1362cccd43b
+floki
+
 # ╔═╡ 9e67e20c-06fe-11eb-1bf3-993195e5e2bc
 function decimate(arr, ratio=5)
 	return arr[1:ratio:end, 1:ratio:end]
@@ -92,6 +94,12 @@ end
 
 # ╔═╡ 14a4de70-06ff-11eb-2e71-c99031d051b8
 show_colored_kernel(kernel)
+
+# ╔═╡ c1600532-072b-11eb-050e-23983fb1ad20
+show_colored_kernel(edge_det_kernel_h)
+
+# ╔═╡ d1cca6d2-072b-11eb-0020-05b3140a3504
+show_colored_kernel(edge_det_kernel_v)
 
 # ╔═╡ bce8fe9e-0705-11eb-3ac5-8708ab3436be
 function rgb_to_float(color)
@@ -111,10 +119,19 @@ function plot_1d_fourier_spectrum(img, dims=1)
 	plot(centered(mean(spectrum, dims=1)[1:end]))
 end
 
+# ╔═╡ ad2a6750-072e-11eb-3836-6dd0a4f1c6fa
+plot_1d_fourier_spectrum(floki)
+
+# ╔═╡ acfd3350-072e-11eb-2978-373f09a03a0b
+plot_1d_fourier_spectrum(zebra)
+
 # ╔═╡ db2e5598-0705-11eb-2f66-b7cb5fb97a42
 function heatmap_2d_fourier_spectrum(img)
 	heatmap(log.(fourier_spectrum_magnitudes(img)))
 end
+
+# ╔═╡ c12e4bb8-0731-11eb-1343-1b4d8997d745
+heatmap_2d_fourier_spectrum(zebra)
 
 # ╔═╡ db13f6a8-0705-11eb-1f2a-e520b0cd0e15
 function clamp_at_boundary(M, i, j)
@@ -164,6 +181,21 @@ conv_image = convolve(floki, kernel)
 # ╔═╡ 639bc506-0700-11eb-2653-bd05edc5c0f4
 conv_image_s = convolve(floki, sharpen_kernel)
 
+# ╔═╡ 636aaf02-0700-11eb-2715-49d4b5556ae0
+conv_image_eh = convolve(conv_image_s, edge_det_kernel_h)
+
+# ╔═╡ 8a7df29c-072b-11eb-3ca8-fdfa0b743b77
+conv_image_ev = convolve(conv_image_s, edge_det_kernel_v)
+
+# ╔═╡ ace46712-072e-11eb-1f35-e9f3e9a4a39e
+zebra_conv = convolve(zebra, kernel)
+
+# ╔═╡ fa0a3cd6-0730-11eb-2ec4-51d88cef9cc6
+plot_1d_fourier_spectrum(zebra_conv)
+
+# ╔═╡ cda4fed2-0731-11eb-383e-c7ed5895887b
+heatmap_2d_fourier_spectrum(zebra_conv)
+
 # ╔═╡ e652aafa-0705-11eb-067b-d960d9d115e1
 function gauss_blur(n, sigma=0.25)
 	kern = gaussian((n, n), sigma)
@@ -178,19 +210,30 @@ end
 # ╠═14d546d2-06ff-11eb-2177-637614ebfd04
 # ╠═14bc416e-06ff-11eb-1374-a9f4c4bf882c
 # ╠═14a4de70-06ff-11eb-2e71-c99031d051b8
-# ╠═63da4632-0700-11eb-3fdf-456fdffc9f98
-# ╠═63c38848-0700-11eb-0b0b-edfe02cad910
 # ╠═63af5242-0700-11eb-0a8f-192d8a1c1f58
+# ╠═63da4632-0700-11eb-3fdf-456fdffc9f98
 # ╠═639bc506-0700-11eb-2653-bd05edc5c0f4
 # ╠═63824522-0700-11eb-2c93-21b28550c46f
+# ╠═c1600532-072b-11eb-050e-23983fb1ad20
 # ╠═636aaf02-0700-11eb-2715-49d4b5556ae0
+# ╠═83e5b088-072b-11eb-05ee-1f9a516d2cec
+# ╠═d1cca6d2-072b-11eb-0020-05b3140a3504
+# ╠═8a7df29c-072b-11eb-3ca8-fdfa0b743b77
+# ╠═ad40d858-072e-11eb-0813-d1362cccd43b
+# ╠═ad2a6750-072e-11eb-3836-6dd0a4f1c6fa
+# ╠═ad16d68e-072e-11eb-023c-5fd6ad5fbc1e
+# ╠═c12e4bb8-0731-11eb-1343-1b4d8997d745
+# ╠═acfd3350-072e-11eb-2978-373f09a03a0b
+# ╠═ace46712-072e-11eb-1f35-e9f3e9a4a39e
+# ╠═fa0a3cd6-0730-11eb-2ec4-51d88cef9cc6
+# ╠═cda4fed2-0731-11eb-383e-c7ed5895887b
 # ╟─e231b0e0-06fd-11eb-3e7c-63b92f7e04f8
 # ╟─9e81c17e-06fe-11eb-1e08-fd5bc6c7b339
 # ╟─9e67e20c-06fe-11eb-1bf3-993195e5e2bc
 # ╟─a54d31d0-06fe-11eb-276d-332aabb4278c
 # ╟─bce8fe9e-0705-11eb-3ac5-8708ab3436be
-# ╟─bcd11e4e-0705-11eb-2b10-ed0a8f94d6a0
-# ╟─bcb82b5c-0705-11eb-2892-f78543f912ed
+# ╠═bcd11e4e-0705-11eb-2b10-ed0a8f94d6a0
+# ╠═bcb82b5c-0705-11eb-2892-f78543f912ed
 # ╟─db2e5598-0705-11eb-2f66-b7cb5fb97a42
 # ╟─db13f6a8-0705-11eb-1f2a-e520b0cd0e15
 # ╟─e6844858-0705-11eb-1b0f-6db56a57e6a9
